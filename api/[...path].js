@@ -1,9 +1,10 @@
 export default async function handler(req, res) {
-  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account" + req.url;
+  const slug = req.query.path || [];
+  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account/" + slug.join("/");
 
   const headers = {};
   headers["origin"] = "https://kingofgames02.github.io";
-  headers["content-type"] = req.headers["content-type"] || "application/json";
+  if (req.headers["content-type"]) headers["content-type"] = req.headers["content-type"];
   if (req.headers["authorization"]) headers["authorization"] = req.headers["authorization"];
   if (req.headers["server-url"]) headers["server-url"] = req.headers["server-url"];
 
@@ -24,7 +25,7 @@ export default async function handler(req, res) {
     res.setHeader("access-control-allow-origin", "*");
     res.end(Buffer.from(data));
   } catch (e) {
-    res.status(502).json({ error: e.message, target });
+    res.status(502).json({ error: e.message });
   }
 }
 

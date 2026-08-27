@@ -5,7 +5,7 @@
 
 const APP_VERSION = "1.0.1";
 const GITHUB_RAW   = "https://raw.githubusercontent.com/KingofGames02/FFWM-app/main";
-const API_BASE     = "/api/wishlist/account";
+const API_BASE     = "/api";
 const LIB_RAW      = "https://raw.githubusercontent.com/KingofGames02/Free-Fire-Items-Library/main";
 const ICONS_BASE   = LIB_RAW + "/ff-icons";
 

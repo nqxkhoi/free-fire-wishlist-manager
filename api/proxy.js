@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
-  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account" + req.url;
+  const cleanUrl = req.url.replace(/^\/api/, "");
+  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account" + cleanUrl;
 
   const headers = { ...req.headers };
   headers["origin"] = "https://kingofgames02.github.io";

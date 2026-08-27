@@ -5,17 +5,9 @@
 
 const APP_VERSION = "1.0.1";
 const GITHUB_RAW   = "https://raw.githubusercontent.com/KingofGames02/FFWM-app/main";
-const API_BASE     = "https://kog-api-gateway.vercel.app/api/wishlist/account";
-const CORS_PROXY   = "https://corsproxy.io/?url=";
+const API_BASE     = "/api/wishlist/account";
 const LIB_RAW      = "https://raw.githubusercontent.com/KingofGames02/Free-Fire-Items-Library/main";
 const ICONS_BASE   = LIB_RAW + "/ff-icons";
-
-function proxyFetch(url, opts = {}) {
-  if (url.startsWith(API_BASE)) {
-    return fetch(CORS_PROXY + encodeURIComponent(url), opts);
-  }
-  return fetch(url, opts);
-}
 
 /* ── Version auto-update (check remote every 6 h) ─────── */
 (function () {
@@ -670,7 +662,7 @@ async function handleLogin(type) {
   }
 
   try {
-    const res  = await proxyFetch(`${API_BASE}/login`, { method: "POST", headers, body });
+    const res  = await fetch(`${API_BASE}/login`, { method: "POST", headers, body });
     const data = await res.json();
     if (res.ok) {
       Object.keys(data).forEach(k => sessionStorage.setItem(k, data[k]));
@@ -705,7 +697,7 @@ async function performAutoLogin() {
   }
   showLoading(true, "loggingIn");
   try {
-    const res  = await proxyFetch(`${API_BASE}/login`, { method: "POST", headers, body });
+    const res  = await fetch(`${API_BASE}/login`, { method: "POST", headers, body });
     const data = await res.json();
     if (res.ok) {
       Object.keys(data).forEach(k => sessionStorage.setItem(k, data[k]));
@@ -736,7 +728,7 @@ function copyUid() {
 
 async function fetchWishlist() {
   try {
-    const res = await proxyFetch(`${API_BASE}/wishlist`, {
+    const res = await fetch(`${API_BASE}/wishlist`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -910,7 +902,7 @@ async function executeModify(action, ids, context, instant = false) {
     if (instant && action === "remove") {
       showLoading(true, "loading");
       await Promise.all(ids.map(id =>
-        proxyFetch(`${API_BASE}/wishlist/update`, {
+        fetch(`${API_BASE}/wishlist/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -937,7 +929,7 @@ async function executeModify(action, ids, context, instant = false) {
       const id = ids[i];
       if (isBulk) updateContextProgress(context, action, i + 1, ids.length);
       try {
-        const res = await proxyFetch(`${API_BASE}/wishlist/update`, {
+        const res = await fetch(`${API_BASE}/wishlist/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1092,7 +1084,7 @@ async function performSearch() {
 
   if (!isNaN(q)) {
     try {
-      const pRes = await proxyFetch(`${API_BASE}/player`, {
+      const pRes = await fetch(`${API_BASE}/player`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1113,7 +1105,7 @@ async function performSearch() {
     } catch { await fetchExternalWishlist(q, "Unknown", "Unknown"); }
   } else {
     try {
-      const res  = await proxyFetch(`${API_BASE}/search`, {
+      const res  = await fetch(`${API_BASE}/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1151,7 +1143,7 @@ async function fetchExternalWishlist(targetUid, nick, region) {
   if (isActionRunning) return;
   showLoading(true, "loading");
   try {
-    const res  = await proxyFetch(`${API_BASE}/wishlist`, {
+    const res  = await fetch(`${API_BASE}/wishlist`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

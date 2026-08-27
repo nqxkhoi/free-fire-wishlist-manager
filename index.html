@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#111215">
+  <meta name="description" content="Vexra Wishlist Manager — Manage your Free Fire wishlist with ease.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Vexra — Wishlist Manager</title>
+
+  <link rel="icon" type="image/png" href="src/vexra_entertainment.png">
+  <link rel="apple-touch-icon" href="src/vexra_entertainment.png">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="src/fonts/GFF-VN-Black.ttf"      as="font" type="font/truetype" crossorigin="anonymous">
+  <link rel="preload" href="src/fonts/GFF-Latin-Regular.ttf" as="font" type="font/truetype" crossorigin="anonymous">
+  <link rel="preload" href="src/fonts/gff_latin_bold.ttf"    as="font" type="font/truetype" crossorigin="anonymous">
+
+  <!-- Preload app script -->
+  <link rel="preload" href="src/js/app.js" as="script">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/css/theme.css">
+</head>
+<body>
+
+<!-- ===================================================== -->
+<!-- LOADER                                                 -->
+<!-- ===================================================== -->
+<div class="loader" id="loaderEl" aria-hidden="true">
+  <div class="loader-welcome">
+    <div class="loader-brand-mark">
+      <img src="src/vexra_entertainment.png" alt="Vexra" class="loader-brand-svg">
+    </div>
+    <span class="loader-welcome-title">Vexra</span>
+    <span class="loader-welcome-sub" id="loaderSub">Wishlist Manager</span>
+  </div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="introBar"></div>
+  </div>
+  <div class="loader-pct" id="introPct">0%</div>
+</div>
+
+<!-- ===================================================== -->
+<!-- NAVBAR                                                 -->
+<!-- ===================================================== -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+
+  <!-- Brand -->
+  <a class="nav-brand" href="#" aria-label="Vexra Wishlist Home">
+    <span class="nav-mark" aria-hidden="true">
+      <img src="src/vexra_entertainment.png" alt="Vexra" class="nav-brand-svg">
+    </span>
+    <div class="nav-brand-text">
+      <span class="nav-title">Vexra</span>
+      <span class="nav-subtitle" id="loaderSubNav">Wishlist</span>
+    </div>
+  </a>
+
+  <div class="nav-spacer"></div>
+
+  <!-- Version badge -->
+  <button class="nav-version-badge" id="navVersionBadge" aria-label="App version">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+    </svg>
+    v1.0.1
+  </button>
+
+  <!-- Nav Actions -->
+  <div class="nav-actions">
+    <button class="nav-btn hide-sm" id="hdrLangBtn" aria-label="Change language">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12,24C5.4,24,0,18.6,0,12S5.4,0,12,0s12,5.4,12,12S18.6,24,12,24z M9.5,17c0.6,3.1,1.7,5,2.5,5s1.9-1.9,2.5-5H9.5zM16.6,17c-0.3,1.7-0.8,3.3-1.4,4.5c2.3-0.8,4.3-2.4,5.5-4.5H16.6z M3.3,17c1.2,2.1,3.2,3.7,5.5,4.5c-0.6-1.2-1.1-2.8-1.4-4.5H3.3z M16.9,15h4.7c0.2-0.9,0.4-2,0.4-3s-0.2-2.1-0.5-3h-4.7c0.2,1,0.2,2,0.2,3S17,14,16.9,15z M9.2,15h5.7c0.1-0.9,0.2-1.9,0.2-3S15,9.9,14.9,9H9.2C9.1,9.9,9,10.9,9,12C9,13.1,9.1,14.1,9.2,15z M2.5,15h4.7c-0.1-1-0.1-2-0.1-3s0-2,0.1-3H2.5C2.2,9.9,2,11,2,12S2.2,14.1,2.5,15z M16.6,7h4.1c-1.2-2.1-3.2-3.7-5.5-4.5C15.8,3.7,16.3,5.3,16.6,7z M9.5,7h5.1c-0.6-3.1-1.7-5-2.5-5C11.3,2,10.1,3.9,9.5,7z M3.3,7h4.1c0.3-1.7,0.8-3.3,1.4-4.5C6.5,3.3,4.6,4.9,3.3,7z"/>
+      </svg>
+      <span id="hdrLangChip">EN</span>
+    </button>
+
+    <button class="nav-btn hide-sm" id="hdrSettingsBtn" aria-label="Settings">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+      <span id="txtSettingsNav">Settings</span>
+    </button>
+
+    <button class="nav-btn nav-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+</nav>
+
+<!-- ===================================================== -->
+<!-- OVERLAY + DRAWER                                       -->
+<!-- ===================================================== -->
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-label="Navigation drawer" aria-modal="true">
+  <div class="drawer-head">
+    <div class="drawer-brand">
+      <span class="drawer-logo" aria-hidden="true">
+        <img src="src/vexra_entertainment.png" alt="" class="drawer-brand-svg">
+      </span>
+      <span id="drawerTitle">Vexra</span>
+    </div>
+    <button class="drawer-x" id="drawerClose" aria-label="Close menu">&#x2715;</button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="d-section" id="dSecNav">Navigation</div>
+    <a class="d-item" href="https://vexravn.github.io/FFIL/" target="_blank" rel="noopener" id="dNavBrowse">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      <span id="dNavBrowseTxt">Items Library</span>
+    </a>
+
+    <div class="d-divider"></div>
+
+    <div class="d-section" id="dSecLang">Language</div>
+    <div class="d-lang" role="group" aria-label="Language selection">
+      <button class="d-lang-btn active" id="dLangEn">EN</button>
+      <button class="d-lang-btn"        id="dLangVi">VI</button>
+      <button class="d-lang-btn"        id="dLangZh">ZH</button>
+    </div>
+
+    <div class="d-divider"></div>
+    <div class="d-section" id="dSecSocial">Follow Vexra</div>
+    <div class="soc-row">
+      <a href="https://www.facebook.com/vexra.vn" target="_blank" rel="noopener noreferrer" class="soc-btn fb" title="Facebook" aria-label="Vexra on Facebook">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<!-- ===================================================== -->
+<!-- MAIN                                                   -->
+<!-- ===================================================== -->
+<main class="wrap" id="mainContent">
+
+  <!-- Page Header (login only) -->
+  <div class="page-header" id="pageHeaderArea">
+    <h1 class="page-title" id="pageTitle">Wishlist Manager</h1>
+
+    <!-- Lang toggle shown only on login -->
+    <div style="margin-top:14px;" id="headerLangBtn">
+      <button class="nav-btn" id="hdrLangBtnInline" style="margin:0 auto;" aria-label="Switch language">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12,24C5.4,24,0,18.6,0,12S5.4,0,12,0s12,5.4,12,12S18.6,24,12,24z M9.5,17c0.6,3.1,1.7,5,2.5,5s1.9-1.9,2.5-5H9.5zM16.6,17c-0.3,1.7-0.8,3.3-1.4,4.5c2.3-0.8,4.3-2.4,5.5-4.5H16.6z M3.3,17c1.2,2.1,3.2,3.7,5.5,4.5c-0.6-1.2-1.1-2.8-1.4-4.5H3.3z M16.9,15h4.7c0.2-0.9,0.4-2,0.4-3s-0.2-2.1-0.5-3h-4.7c0.2,1,0.2,2,0.2,3S17,14,16.9,15z M9.2,15h5.7c0.1-0.9,0.2-1.9,0.2-3S15,9.9,14.9,9H9.2C9.1,9.9,9,10.9,9,12C9,13.1,9.1,14.1,9.2,15z M2.5,15h4.7c-0.1-1-0.1-2-0.1-3s0-2,0.1-3H2.5C2.2,9.9,2,11,2,12S2.2,14.1,2.5,15z M16.6,7h4.1c-1.2-2.1-3.2-3.7-5.5-4.5C15.8,3.7,16.3,5.3,16.6,7z M9.5,7h5.1c-0.6-3.1-1.7-5-2.5-5C11.3,2,10.1,3.9,9.5,7z M3.3,7h4.1c0.3-1.7,0.8-3.3,1.4-4.5C6.5,3.3,4.6,4.9,3.3,7z"/>
+        </svg>
+        <span id="hdrLangChipInline">EN → VI</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- LOGIN SECTION                                       -->
+  <!-- ================================================== -->
+  <div id="loginSection" class="card">
+
+    <!-- DAT / MANUAL toggle -->
+    <div class="login-toggle">
+      <span id="labelDat" class="toggle-label active">.DAT FILE</span>
+      <label class="switch" aria-label="Toggle login mode">
+        <input type="checkbox" id="modeSwitch">
+        <span class="slider"></span>
+      </label>
+      <span id="labelManual" class="toggle-label">MANUAL</span>
+    </div>
+
+    <!-- DAT form -->
+    <div id="formDat">
+      <div class="input-group">
+        <div class="input-label" id="uploadLabel">UPLOAD GUEST1234567.DAT</div>
+        <div class="file-upload-wrap">
+          <label for="guestFile" class="btn-choose" id="btnChooseFile">Choose File</label>
+          <span class="file-name" id="fileLabel">No File Choose</span>
+          <input type="file" id="guestFile" accept=".dat">
+        </div>
+      </div>
+      <button class="btn btn-green btn-full" id="btnLoginDat">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>LOGIN WITH .DAT FILE</span>
+      </button>
+    </div>
+
+    <!-- Manual form -->
+    <div id="formManual" class="hidden">
+      <div class="input-group">
+        <label class="input-label" for="manualUid">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span id="uidLabel">GUEST UID</span>
+        </label>
+        <input type="text" class="input-field" id="manualUid" placeholder="Enter your Guest UID" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="manualPassword">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span id="pwdLabel">GUEST PASSWORD</span>
+        </label>
+        <input type="password" class="input-field" id="manualPassword" placeholder="Enter your Password">
+      </div>
+      <button class="btn btn-green btn-full" id="btnLoginCred">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>LOGIN WITH CREDENTIALS</span>
+      </button>
+    </div>
+
+    <!-- Login notification -->
+    <div id="loginNotif" class="notif-box hidden" style="margin-top:14px;"></div>
+
+    <p class="session-info" id="sessionInfo">Your Credentials Are Saved Securely To Keep You Logged In.</p>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- DASHBOARD SECTION                                   -->
+  <!-- ================================================== -->
+  <div id="dashSection" class="card large hidden">
+
+    <!-- User card -->
+    <div class="user-card">
+      <div class="user-avatar" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <div class="user-meta">
+        <div class="user-meta-label" id="loggedInAsLabel">LOGGED IN AS</div>
+        <div class="user-meta-uid"   id="displayUid"></div>
+        <div class="region-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          <span id="displayRegion">ME</span>
+        </div>
+      </div>
+      <div class="user-actions">
+        <button class="icon-btn copy" id="btnCopyUid" title="Copy UID" aria-label="Copy UID">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+        <button class="icon-btn exit" id="btnLogout" title="Logout" aria-label="Logout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick nav -->
+    <div class="nav-grid">
+      <a href="https://vexravn.github.io/FFIL/" target="_blank" rel="noopener" class="btn btn-outline" id="btnItemsLibrary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>ITEMS LIBRARY</span>
+      </a>
+      <button class="btn btn-outline" id="btnSearchAccount">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>SEARCH ACCOUNT</span>
+      </button>
+    </div>
+
+    <!-- Corrupted warning -->
+    <div id="corruptedBanner" class="warn-box hidden">
+      <span class="warn-text" id="corruptedBannerText">Corrupted items detected in your wishlist! Please select and remove them.</span>
+    </div>
+
+    <!-- Add by ID -->
+    <div class="input-group" style="margin-bottom:10px;">
+      <label class="input-label" for="targetIds">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span id="itemIdLabel">ITEM ID (COMMA SEPARATED FOR MULTIPLE)</span>
+      </label>
+      <input type="text" class="input-field" id="targetIds" placeholder="Enter item IDs">
+    </div>
+
+    <!-- Add / Remove row -->
+    <div class="action-row">
+      <button class="btn btn-green" id="btnAddMain">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span>ADD</span>
+      </button>
+      <button class="btn btn-red" id="btnRemoveMain">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13H5v-2h14v2z"/></svg>
+        <span>REMOVE</span>
+      </button>
+    </div>
+
+    <!-- Dashboard notification -->
+    <div id="dashNotif" class="notif-box hidden" style="margin-top:10px;"></div>
+
+    <!-- Remove instruction -->
+    <div id="dashInst" class="inst-box hidden" style="margin-top:10px;">
+      <span class="inst-text"></span>
+    </div>
+
+    <!-- Wishlist header -->
+    <div class="wishlist-header">
+      <span class="wishlist-title" id="dashboardTitle">MY WISHLIST</span>
+      <span class="wishlist-count">
+        <span id="countCurrent">0</span><span id="countMax">/100</span>
+      </span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progressFill"></div></div>
+
+    <!-- Items grid -->
+    <div class="items-grid" id="wishlistGrid" role="list" aria-label="My Wishlist"></div>
+
+    <!-- Remove all -->
+    <div class="remove-all-wrap">
+      <button class="btn btn-outline btn-full" id="btnRemoveAll" style="color:var(--red);border-color:var(--red-ring);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>REMOVE ALL ITEMS</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- SEARCH SECTION                                      -->
+  <!-- ================================================== -->
+  <div id="searchSection" class="card large hidden">
+
+    <button class="back-btn" id="backBtn" aria-label="Back to dashboard">← BACK</button>
+
+    <!-- Search input -->
+    <div class="input-group">
+      <label class="input-label" for="searchInput">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span id="searchLabel">SEARCH BY ID OR NICKNAME</span>
+      </label>
+      <input type="search" class="input-field" id="searchInput" placeholder="Enter Player Name or ID" autocomplete="off">
+    </div>
+    <button class="btn btn-green btn-full" id="btnSearchNow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>SEARCH NOW</span>
+    </button>
+
+    <!-- Search results list -->
+    <div class="search-results" id="searchResults" aria-live="polite"></div>
+
+    <!-- Searched user section -->
+    <div id="searchedUserSection" class="hidden" style="margin-top:22px;width:100%;">
+
+      <!-- Searched user card -->
+      <div class="user-card" style="border-left-color:var(--accent);">
+        <div class="user-avatar" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+        <div class="user-meta">
+          <div class="user-meta-uid"   id="searchNick"></div>
+          <div class="user-meta-label" id="searchUid"></div>
+          <div class="region-badge" style="margin-top:3px;"><span id="searchRegion"></span></div>
+        </div>
+      </div>
+
+      <!-- Searched corrupted warning -->
+      <div id="searchCorruptedBanner" class="warn-box hidden">
+        <span class="warn-text" id="searchCorruptedBannerText">Corrupted Items Detected In This Player's Wishlist!</span>
+      </div>
+
+      <!-- Bulk actions -->
+      <div class="bulk-actions">
+        <button class="btn btn-accent" id="btnSearchAdd">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span>SELECT ITEMS TO ADD</span>
+        </button>
+        <button class="btn btn-outline" id="btnAddAllSearch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          <span>ADD ALL ITEMS</span>
+        </button>
+      </div>
+
+      <!-- Search notification -->
+      <div id="searchNotif" class="notif-box hidden"></div>
+
+      <!-- Search add instruction -->
+      <div id="searchInst" class="inst-box hidden">
+        <span class="inst-text"></span>
+      </div>
+
+      <!-- Bulk progress -->
+      <div id="searchBulkBox" class="bulk-prog-box hidden">
+        <div class="bulk-prog-status" id="bulkStatus"></div>
+        <div class="bulk-prog-meta">
+          <span class="bulk-prog-label" id="bulkLabel"></span>
+          <span class="bulk-prog-count" id="bulkCount"></span>
+        </div>
+        <div class="prog-bar" style="margin-bottom:0;">
+          <div class="prog-fill" id="bulkFill" style="width:0%;"></div>
+        </div>
+      </div>
+
+      <!-- Searched player wishlist header -->
+      <div class="wishlist-header">
+        <span class="wishlist-title" id="playerWishlistTitle">PLAYER'S WISHLIST</span>
+        <span class="wishlist-count"><span id="searchCountCurrent">0</span></span>
+      </div>
+
+      <!-- Searched items grid -->
+      <div class="items-grid" id="searchedGrid" role="list" aria-label="Player Wishlist"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================================================== -->
+<!-- FOOTER                                                 -->
+<!-- ===================================================== -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-follow" id="txtSmFollow2">Follow Vexra</div>
+    <div class="soc-row" style="justify-content:center;">
+      <a href="https://www.facebook.com/vexra.vn" target="_blank" rel="noopener noreferrer" class="soc-btn fb" title="Facebook" aria-label="Vexra on Facebook">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="footer-copy">© 2026 Vexra Entertainment. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ===================================================== -->
+<!-- ITEM DETAIL MODAL                                      -->
+<!-- ===================================================== -->
+<div class="modal" id="itemModal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal('itemModal')" aria-label="Close">&#x2715;</button>
+
+    <!-- Hero -->
+    <div class="im-hero">
+      <div class="im-img-wrap loading" id="imImgWrap">
+        <img id="itemModalIcon" src="" class="im-img" alt="" style="opacity:0;" loading="eager">
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="im-body">
+      <div class="im-row">
+        <span class="im-key" id="txtModalName">Name</span>
+        <span class="im-val im-name-val" id="modalName"></span>
+      </div>
+      <div class="im-row">
+        <span class="im-key" id="txtModalId">Item ID</span>
+        <span class="im-val" id="modalItemId"></span>
+      </div>
+      <div class="im-row">
+        <span class="im-key" id="txtModalIconId">Icon ID</span>
+        <span class="im-val" id="modalIconId"></span>
+      </div>
+      <div class="im-desc-box">
+        <span class="im-desc-key" id="txtModalDesc">Description</span>
+        <div class="im-desc-val" id="modalDesc"></div>
+      </div>
+    </div>
+
+    <!-- Dynamic action area (add / remove button) -->
+    <div class="im-acts" id="modalActionArea">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Close button -->
+    <div style="padding:0 16px 16px;">
+      <button class="btn btn-outline btn-full" id="modalCloseBtn">
+        <span>CLOSE</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- CONFIRM CLEAR ALL MODAL                                -->
+<!-- ===================================================== -->
+<div class="modal" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="mbox danger">
+    <button class="mclose" onclick="closeModal('confirmModal')" aria-label="Close">&#x2715;</button>
+    <div class="confirm-body">
+      <div class="confirm-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" style="width:52px;height:52px;display:block;">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div class="confirm-title" id="confirmTitle">ARE YOU SURE?</div>
+      <p class="confirm-text" id="confirmText">This Will Remove ALL items from your wishlist. This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-outline" id="btnCancelClear"><span>CANCEL</span></button>
+        <button class="btn btn-red"     id="btnConfirmClear"><span>CONFIRM</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SETTINGS MODAL                                         -->
+<!-- ===================================================== -->
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="mbox sm" style="border-top-color:var(--accent);">
+    <button class="mclose" id="settingsCloseBtn" aria-label="Close settings">&#x2715;</button>
+    <div class="sm-body">
+      <div class="sm-title" id="settingsTitle">Settings</div>
+
+      <div class="sm-item">
+        <div class="sm-info">
+          <strong>
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12,24C5.4,24,0,18.6,0,12S5.4,0,12,0s12,5.4,12,12S18.6,24,12,24z M9.5,17c0.6,3.1,1.7,5,2.5,5s1.9-1.9,2.5-5H9.5zM16.6,17c-0.3,1.7-0.8,3.3-1.4,4.5c2.3-0.8,4.3-2.4,5.5-4.5H16.6z M3.3,17c1.2,2.1,3.2,3.7,5.5,4.5c-0.6-1.2-1.1-2.8-1.4-4.5H3.3z M16.9,15h4.7c0.2-0.9,0.4-2,0.4-3s-0.2-2.1-0.5-3h-4.7c0.2,1,0.2,2,0.2,3S17,14,16.9,15z M9.2,15h5.7c0.1-0.9,0.2-1.9,0.2-3S15,9.9,14.9,9H9.2C9.1,9.9,9,10.9,9,12C9,13.1,9.1,14.1,9.2,15z M2.5,15h4.7c-0.1-1-0.1-2-0.1-3s0-2,0.1-3H2.5C2.2,9.9,2,11,2,12S2.2,14.1,2.5,15z M16.6,7h4.1c-1.2-2.1-3.2-3.7-5.5-4.5C15.8,3.7,16.3,5.3,16.6,7z M9.5,7h5.1c-0.6-3.1-1.7-5-2.5-5C11.3,2,10.1,3.9,9.5,7z M3.3,7h4.1c0.3-1.7,0.8-3.3,1.4-4.5C6.5,3.3,4.6,4.9,3.3,7z"/>
+            </svg>
+            <span id="txtLangSetting">Language</span>
+          </strong>
+        </div>
+        <div class="sm-lrow" role="group" aria-label="Choose language">
+          <button class="sm-lbtn on"  id="smLangEn">EN</button>
+          <button class="sm-lbtn"     id="smLangVi">VI</button>
+          <button class="sm-lbtn"     id="smLangZh">ZH</button>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div class="footer-follow" style="margin-bottom:8px;" id="txtSmFollow">Follow Vexra</div>
+        <div class="soc-row">
+          <a href="https://www.facebook.com/vexra.vn" target="_blank" rel="noopener noreferrer" class="soc-btn fb" title="Facebook" aria-label="Vexra on Facebook">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- UPDATE AVAILABLE MODAL                                 -->
+<!-- ===================================================== -->
+<div class="modal" id="updateModal" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+  <div class="mbox" style="border-top-color:var(--gold);">
+    <button class="mclose" onclick="closeModal('updateModal')" aria-label="Close">&#x2715;</button>
+    <div class="update-body">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" style="width:28px;height:28px;flex-shrink:0;" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div class="update-title" id="updateTitle">UPDATE AVAILABLE</div>
+      </div>
+      <p class="update-text" id="updateText">A New Version Is Available. Refresh to get the latest features.</p>
+      <div class="update-versions">
+        <span class="update-old">
+          <span id="txtUpdateCurrent" style="color:var(--text-4);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;">Current</span>
+          <span style="display:block;font-size:1rem;" id="updateOld">v1.0.1</span>
+        </span>
+        <span class="update-arrow">→</span>
+        <span class="update-new">
+          <span id="txtUpdateNew" style="color:var(--green);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;">New</span>
+          <span style="display:block;font-size:1rem;" id="updateNew">v1.0.2</span>
+        </span>
+      </div>
+      <div class="update-actions">
+        <button class="btn btn-outline" id="btnLater"><span>LATER</span></button>
+        <button class="btn btn-green"   id="btnRefresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <span>REFRESH NOW</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- APP SCRIPT                                             -->
+<!-- ===================================================== -->
+<script>
+  /* Inline lang-toggle for the header inline button (login screen) */
+  document.addEventListener("DOMContentLoaded", function() {
+    const btn = document.getElementById("hdrLangBtnInline");
+    const chip = document.getElementById("hdrLangChipInline");
+    if (btn) {
+      btn.addEventListener("click", function() {
+        const p = new URLSearchParams(window.location.search);
+        const cur = p.get("lang") || "en";
+        const next = cur === "en" ? "vi" : cur === "vi" ? "zh" : "en";
+        p.set("lang", next);
+        window.location.search = p.toString();
+      });
+    }
+    /* Update chip label based on current lang */
+    const p = new URLSearchParams(window.location.search);
+    const cur = p.get("lang") || "en";
+    const nextLabel = cur === "en" ? "EN → VI" : cur === "vi" ? "VI → ZH" : "ZH → EN";
+    if (chip) chip.textContent = nextLabel;
+  });
+</script>
+<script src="src/js/app.js"></script>
+
+</body>
+</html>

@@ -1,19 +1,14 @@
 export default async function handler(req, res) {
-  const cleanUrl = req.url.replace(/^\/api/, "");
-  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account" + cleanUrl;
+  const target = "https://kog-api-gateway.vercel.app/api/wishlist/account" + req.url;
 
-  const headers = { ...req.headers };
+  const headers = {};
   headers["origin"] = "https://kingofgames02.github.io";
-  delete headers["host"];
-  delete headers["x-forwarded-for"];
-  delete headers["x-forwarded-host"];
-  delete headers["x-real-ip"];
+  headers["content-type"] = req.headers["content-type"] || "application/json";
+  if (req.headers["authorization"]) headers["authorization"] = req.headers["authorization"];
+  if (req.headers["server-url"]) headers["server-url"] = req.headers["server-url"];
 
   try {
-    const fetchOpts = {
-      method: req.method,
-      headers,
-    };
+    const fetchOpts = { method: req.method, headers };
 
     if (req.method !== "GET" && req.method !== "HEAD") {
       const chunks = [];
@@ -25,13 +20,11 @@ export default async function handler(req, res) {
     const data = await apiRes.arrayBuffer();
 
     res.status(apiRes.status);
-    apiRes.headers.forEach((v, k) => {
-      if (k !== "content-encoding" && k !== "transfer-encoding") res.setHeader(k, v);
-    });
+    res.setHeader("content-type", apiRes.headers.get("content-type") || "application/json");
     res.setHeader("access-control-allow-origin", "*");
     res.end(Buffer.from(data));
   } catch (e) {
-    res.status(502).json({ error: "Proxy failed: " + e.message });
+    res.status(502).json({ error: e.message, target });
   }
 }
 
